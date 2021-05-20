@@ -10,7 +10,7 @@ def norm(x, mju_mean, sigma_variance):
     :param sigma_variance: параетр масштаба
     :return: значение случайной величины
     """
-    return (1 / (sigma_variance * sqrt(2 * pi))) * exp(-0.5 * ((x - mju_mean) / sigma_variance) ** 2)
+    return (1 / (sigma_variance * sqrt(2 * pi))) * exp(-((x - mju_mean) / 2 * sigma_variance) ** 2)
 
 
 def relay(x, sigma_variance):

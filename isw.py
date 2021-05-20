@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, AnyStr
 
 
 def read_from_isw_file(filename: str) -> List[float]:
@@ -18,7 +18,7 @@ def read_from_isw_file(filename: str) -> List[float]:
     return xs
 
 
-def save_to_isw_file(data: List[float], filename: str, description: str):
+def save_to_isw_file(data: List[float], filename: str, description: AnyStr):
     """Записать выборки в файл формата ISW.
     :param data: набор данных
     :param filename: имя файла

@@ -1,28 +1,20 @@
-import distributions_pdf as pdf
+import math
 
 import numpy as np
+import scipy.stats as stats
 
 
-def anderson_darling(xs, dist_name):
+def anderson_darling(xs, dist_type):
     """Тест критерием Андерсона-Дарлинга.
 
     :param xs: выборка
-    :param dist_name: {'norm', 'relay', 'cauchy'} тип распределения
+    :param dist_type: {'norm', 'rayleigh', 'cauchy'} тип распределения
     :return:
     """
-    def norm_wrapper(x):
-        return pdf.norm(x, mju_mean=mju, sigma_variance=sigma)
-
-    def relay_wrapper(x):
-        return pdf.relay(x, sigma_variance=sigma)
-
-    def cauchy_wrapper(x):
-        return pdf.cauchy(x, mju_mean=mju, sigma_variance=sigma)
-
-    pdf_dicts = {
-        'norm': norm_wrapper,
-        'relay': relay_wrapper,
-        'cauchy': cauchy_wrapper
+    cdf_dicts = {
+        'norm': stats.norm.cdf,
+        'rayleigh': stats.rayleigh.cdf,
+        'cauchy': stats.cauchy.cdf,
     }
 
     xs_sorted = np.sort(np.asarray(xs))
@@ -31,13 +23,13 @@ def anderson_darling(xs, dist_name):
     mju = np.mean(xs_sorted)
     sigma = np.sqrt(np.mean((xs_sorted - mju) ** 2))
 
-    distribution_pdf_func = pdf_dicts[dist_name]
+    distribution_cdf_func = cdf_dicts[dist_type]
 
-    a_value = - n
     s_value = 0
     for i in range(n):
-        multiplier = (2 * i - 1.0) / 2 * n
-        s_value += multiplier * np.log(distribution_pdf_func(xs_sorted[i])) \
-            + (1 - multiplier) * np.log(1 - distribution_pdf_func(xs_sorted[i]))
-    a_value -= 2 * s_value
+        multiplier = (2 * i - 1.0) / (2 * n)
+        dist_by_x = distribution_cdf_func(xs_sorted[i])
+
+        s_value += (multiplier * math.log(dist_by_x)) + ((1 - multiplier) * math.log(1 - dist_by_x))
+    a_value = -n - (2 * s_value)
     return a_value
