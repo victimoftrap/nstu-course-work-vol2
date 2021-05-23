@@ -20,9 +20,6 @@ def anderson_darling(xs, dist_type):
     xs_sorted = np.sort(np.asarray(xs))
     n = len(xs_sorted)
 
-    mju = np.mean(xs_sorted)
-    sigma = np.sqrt(np.mean((xs_sorted - mju) ** 2))
-
     distribution_cdf_func = cdf_dicts[dist_type]
 
     s_value = 0
